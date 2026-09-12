@@ -1,62 +1,80 @@
+struct stack
+{
+    int top;
+    char arr[1000];
+}s1,s2;
+void push(char c,int n)
+{
+    if(n==1)
+    {
+    s1.arr[++s1.top]=c;   
+    }
+    else
+    {
+        s2.arr[++s2.top]=c;
+    }
+  
+}
+void pull(int n)
+{
+   
+    if(n==1)
+    {
+        if(s1.top!=-1)
+        {
+            s1.top--;
+        }
+    
+    }
+    else
+    {
+        if(s2.top!=-1)
+        {
+            s2.top--;
+        }
+    }
+}
 bool backspaceCompare(char* s, char* t)
 {
-    int len = strlen(s);
-
-    for(int i = 0; i < len; i++)
+    s1.top=-1;
+    s2.top=-1;
+    for(int i=0;i<strlen(s);i++)
     {
-        if(s[i] == '#')
+        if(isalnum(s[i]))
         {
-            if(i > 0)
+            push(s[i],1);
+        }
+        else
+        {
+            if(s1.top!=-1)
             {
-                for(int j = i-1; j < len-1; j++)
-                {
-                    s[j] = s[j+2];
-                }
-
-                len = len - 2;
-                i = i - 2;
-            }
-            else
-            {
-                for(int j = i; j < len; j++)
-                {
-                    s[j] = s[j+1];
-                }
-
-                len = len - 1;
-                i--;
+                pull(1);
             }
         }
     }
-
-    len = strlen(t);
-
-    for(int i = 0; i < len; i++)
+     for(int i=0;i<strlen(t);i++)
     {
-        if(t[i] == '#')
+        if(isalnum(t[i]))
         {
-            if(i > 0)
+            push(t[i],0);
+        }
+        else
+        {
+            if(s2.top!=-1)
             {
-                for(int j = i-1; j < len-1; j++)
-                {
-                    t[j] = t[j+2];
-                }
-
-                len = len - 2;
-                i = i - 2;
-            }
-            else
-            {
-                for(int j = i; j < len; j++)
-                {
-                    t[j] = t[j+1];
-                }
-
-                len = len - 1;
-                i--;
+                pull(0);
             }
         }
     }
+      if(s1.top != s2.top)
+        return false;
 
-    return strcmp(s, t) == 0;
+    for(int i = 0; i <= s1.top; i++)
+    {
+        if(s1.arr[i] != s2.arr[i])
+        {
+            return false;
+        }
+    }
+    return true;
 }
